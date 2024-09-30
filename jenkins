@@ -1,58 +1,40 @@
-pipeline{
+pipeline {
     agent any
-
-    environment {
-          PYTHON_ENV= 'venv'          // Virtual environment for python
+    stages {
+        stage('Checkout') {
+            steps {
+                // Checkout code from Git
+                git url: ''https://github.com/Kaja-Reshmi/my-python-app.git' 
+            }
+        }
+        stage('Setup Environment') {
+            steps {
+                echo "Creating virtual environment..."
+                bat 'C:\\Users\\Windows\\AppData\\Local\\Programs\\Python\\Python312\\python.exe -m venv venv'  // Use double backslashes
+                echo "Activating virtual environment..."
+                bat 'call venv\\Scripts\\activate.bat'  // This line is fine as is
+                echo "Installing dependencies..."
+                bat 'C:\\Users\\Windows\\AppData\\Local\\Programs\\Python\\Python312\\Scripts\\pip.exe install -r requirements.txt'  // Use double backslashes
+            }
+        }
+        stage('Run Tests') {
+            steps {
+                echo "Running tests..."
+                // Add your testing commands here, for example:
+                // bat 'pytest'
+            }
+        }
+        stage('Deploy') {
+            steps {
+                echo "Deploying application..."
+                // Add your deployment commands here
+            }
+        }
     }
-
-stages {
-   // stage 1: clone the repository
-   stage('checkout'){
-       steps {
-           echo 'cloning repository...'
-           git branch: 'main', url: 'https://github.com/Kaja-Reshmi/my-python-app.git'
+    post {
+        always {
+            echo "Cleaning up workspace..."
+            cleanWs()
+        }
     }
-// stage 2: set up the python environment
-stage('set up environment'){
-    steps {
-         echo 'setting up python virtual environment...'
-         sh'''
-             python3 -m venv ${PYTHON_ENV}  #create a virtual environment
-             source ${PYTHON_ENV}/Bin/activate   #activate the virtual environment
-             pip install -r  requirments.txt   #install dependencies
-         '''
-    }
- }
-//stage 3: Run unite tests
-stage('Run Tests') {
-    steps {
-        echo 'Running unit tests....'
-         sh'''
-             source ${PYTHON_ENV}/bin/activate       #ACTIVATE THE VIRTUAL ENVIRONMENT 
-             pytest tests/                           #run the unit test using pytest
-        '''
-  }
-}
-//stage 4: Deploy(this could be to a local HTTP server, for example)
-stage('Deploy'){
-    steps {
-        echo 'Deploying applications...'
-        //In this example, we,ll simulate deployment by copying the code to a server directory
-        sh'''
-          cp -r * /path/to/local/http/server/root/  #copy the app to the deployment directory
-        '''
-    }
-}
-}
-post{
-   always {
-      echo 'cleaning up workspace...'
-       cleanWs()
-}
- success {
-echo 'pipeline completed successfully!'
-}
-failure {
-  echo 'pipeline failed!'
-}
 }
