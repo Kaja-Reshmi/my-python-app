@@ -4,17 +4,17 @@ pipeline {
         stage('Checkout') {
             steps {
                 // Checkout code from Git
-                git url: ''https://github.com/Kaja-Reshmi/my-python-app.git' 
+                git url: 'https://github.com/Kaja-Reshmi/my-python-app.git'
             }
         }
         stage('Setup Environment') {
             steps {
                 echo "Creating virtual environment..."
-                bat 'C:\\Users\\Windows\\AppData\\Local\\Programs\\Python\\Python312\\python.exe -m venv venv'  // Use double backslashes
+                bat 'C:\Users\Achuth Kaja\AppData\Local\Programs\Python\Python312\python.exe' // Use double backslashes
                 echo "Activating virtual environment..."
                 bat 'call venv\\Scripts\\activate.bat'  // This line is fine as is
                 echo "Installing dependencies..."
-                bat 'C:\\Users\\Windows\\AppData\\Local\\Programs\\Python\\Python312\\Scripts\\pip.exe install -r requirements.txt'  // Use double backslashes
+                bat 'C:\Users\Achuth Kaja\AppData\Local\Microsoft\WindowsApps\python.exe'  // Use double backslashes
             }
         }
         stage('Run Tests') {
